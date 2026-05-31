@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import meow from 'meow';
 import log, { setVerbose } from './lib/utils/log.mjs';
 import { ExitPromptError } from '@inquirer/core';
