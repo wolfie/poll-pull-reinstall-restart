@@ -27,19 +27,28 @@ pnpm run check                                  # format + lint + tsc --noEmit (
 1. Assert `git` exists, locate repo root, chdir if needed.
 2. Detect package manager (`getPackageManagerInfo` — by lockfile name).
 3. Load `.pprrc` via `getEnv` (dotenv). `RESTART_SCRIPTS` is required.
-4. Run `ONCE_SCRIPTS` to completion (`await spawnSerial(...).promise`).
-5. `createPullAndRestart()` → first call awaited → `setInterval` for subsequent polls.
+4. If `NVM_AUTO_INSTALL=true`, run `execNvm()` (bash subshell — see below). If `COREPACK_ENABLE=true`, run `execCorepackEnable()`.
+5. Install deps via `execProjectInstall`.
+6. Run `ONCE_SCRIPTS` to completion (`await spawnSerial(...).promise`).
+7. `createPullAndRestart()` → first call awaited → `setInterval` for subsequent polls.
 
 ### `pullAndRestart` is a factory, not a module singleton
 
-`createPullAndRestart(deps?)` returns a closure holding the in-flight `locked` flag and the current spawn handle. Tests pass stub `execGitPull` / `execProjectInstall` / `spawnSerial`; production calls it with no args. **Do not reintroduce module-level mutable state here** — the factory shape exists to make tests deterministic.
+`createPullAndRestart(deps?)` returns a closure holding the in-flight `locked` flag and the current spawn handle. Tests pass stubs for `execGitPull` / `execProjectInstall` / `execNvm` / `execCorepackEnable` / `spawnSerial`; production calls it with no args. **Do not reintroduce module-level mutable state here** — the factory shape exists to make tests deterministic.
 
 Poll body contract:
 - Concurrent invocations short-circuit on `locked`.
 - A `git pull` failure logs and returns — never crashes the daemon. The next tick retries.
-- First run: skip install, start restart scripts.
+- First run: skip nvm/corepack/install, start restart scripts.
 - Subsequent run, no upstream changes: return.
-- Subsequent run, changed: `killAll(1000)` → install → spawn new restart chain.
+- Subsequent run, changed: `killAll(1000)` → nvm (if `nvmAutoInstall`) → corepack (if `corepackEnable`) → install → spawn new restart chain.
+- nvm failure is soft: install and restart proceed regardless. `execNvm`'s return value is not checked by the caller.
+
+### nvm and corepack (`lib/node/`)
+
+`execNvm()` runs `nvm install` by sourcing `$NVM_DIR/nvm.sh` inside a `bash -c` subshell. nvm output is redirected to stderr so the user sees it; the updated `$PATH` is printed to stdout, captured, and written back to `process.env.PATH` so subsequent `spawn` calls resolve binaries from the switched Node version. Call it only when `env.nvmAutoInstall` is true — that gate lives at the call site, not inside the function.
+
+`execCorepackEnable()` is always a soft operation: ENOENT (no `corepack` binary) and non-zero exits are logged but never thrown.
 
 ### spawn / spawnSerial (`lib/utils/`)
 
