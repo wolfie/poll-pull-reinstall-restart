@@ -45,19 +45,24 @@ npx poll-pull-reinstall-restart
 
 On startup it optionally runs `nvm install` (if `NVM_AUTO_INSTALL=true` and `.nvmrc` is present), optionally runs `corepack enable`, installs dependencies, runs any `ONCE_SCRIPTS` to completion, then enters the poll loop. On each poll it runs `git pull`; if the working tree changed it re-runs nvm/corepack, reinstalls, and restarts `RESTART_SCRIPTS`.
 
+If `NTFY_TOPIC` is set, lifecycle events (service started, update detected, restart failures, git pull failures, and shutdown) are pushed as [ntfy](https://ntfy.sh) notifications to that topic.
+
 ## Configuration
 
 Reads from `.pprrc` in the project root (dotenv format), falling back to environment variables.
 
-| Variable           | Required | Default | Description                                                                       |
-| ------------------ | -------- | ------- | --------------------------------------------------------------------------------- |
-| `RESTART_SCRIPTS`  | yes      | —       | Comma-separated `package.json` script names to run on each (re)start              |
-| `ONCE_SCRIPTS`     | no       | —       | Comma-separated scripts to run once on startup                                    |
-| `POLL_INTERVAL`    | no       | `60`    | Seconds between polls                                                             |
-| `SSH_KEY_PATH`     | no       | —       | Path to SSH private key for git authentication                                    |
-| `INSTALL_DEV_PKGS` | no       | `false` | Install `devDependencies` on each reinstall                                       |
-| `NVM_AUTO_INSTALL` | no       | `true`  | Run `nvm install` on startup and on each changed pull (requires `.nvmrc` and nvm) |
-| `COREPACK_ENABLE`  | no       | `true`  | Run `corepack enable` after each Node version switch                              |
+| Variable           | Required | Default           | Description                                                                       |
+| ------------------ | -------- | ----------------- | --------------------------------------------------------------------------------- |
+| `RESTART_SCRIPTS`  | yes      | —                 | Comma-separated `package.json` script names to run on each (re)start              |
+| `ONCE_SCRIPTS`     | no       | —                 | Comma-separated scripts to run once on startup                                    |
+| `POLL_INTERVAL`    | no       | `60`              | Seconds between polls                                                             |
+| `SSH_KEY_PATH`     | no       | —                 | Path to SSH private key for git authentication                                    |
+| `INSTALL_DEV_PKGS` | no       | `false`           | Install `devDependencies` on each reinstall                                       |
+| `NVM_AUTO_INSTALL` | no       | `true`            | Run `nvm install` on startup and on each changed pull (requires `.nvmrc` and nvm) |
+| `COREPACK_ENABLE`  | no       | `true`            | Run `corepack enable` after each Node version switch                              |
+| `SERVICE_NAME`     | no       | —                 | Label prepended to ntfy notification titles, e.g. `[my-app] Service started`      |
+| `NTFY_TOPIC`       | no       | —                 | [ntfy](https://ntfy.sh) topic to send lifecycle notifications to                  |
+| `NTFY_SERVER`      | no       | `https://ntfy.sh` | ntfy server base URL                                                              |
 
 ## CLI flags
 

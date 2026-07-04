@@ -36,16 +36,20 @@ const args = meow(
         --verbose, -v      Increase logging
         
     Environment
-        RESTART_SCRIPTS    A comma-separated list of package.json scripts to run 
+        RESTART_SCRIPTS    A comma-separated list of package.json scripts to run
                             before the project is (re)started
-        ONCE_SCRIPTS       (optional) A comma-separated list of package.json 
+        ONCE_SCRIPTS       (optional) A comma-separated list of package.json
                             scripts to run on startup
-        SSH_KEY_PATH       (optional) The path to the public key of the SSH key to 
+        SSH_KEY_PATH       (optional) The path to the public key of the SSH key to
                             use for this project for remote authentication
         INSTALL_DEV_PKGS   (default: false) Should devDependencies be installed
                             whenever project is (re)started
-        POLL_INTERVAL      (default: 60) How many seconds between polls to remote 
-                            for updates`,
+        POLL_INTERVAL      (default: 60) How many seconds between polls to remote
+                            for updates
+        SERVICE_NAME       (optional) Label prepended to ntfy notification titles,
+                            e.g. "[my-app] Service started"
+        NTFY_TOPIC         (optional) ntfy topic to send lifecycle notifications to
+        NTFY_SERVER        (optional, default: https://ntfy.sh) ntfy server base URL`,
 
   {
     helpIndent: 0,
