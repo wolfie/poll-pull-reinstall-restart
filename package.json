@@ -1,6 +1,6 @@
 {
   "name": "poll-pull-reinstall-restart",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "ISC",
   "type": "module",
   "main": "index.mjs",
@@ -43,5 +43,5 @@
     "meow": "^14.0.0",
     "tree-kill": "^1.2.2"
   },
-  "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1"
+  "packageManager": "pnpm@11.18.0+sha512.33d83c77da82f49fba836925c6f1b841181ec3132b670639bd012f7075f5c7cf634c5f870147c19aae7478fac01df09d8892e880454896edd23ee9b33757563c"
 }
