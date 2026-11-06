@@ -10,6 +10,7 @@ Useful for running a project on a server where deployments happen by pushing to 
 - `git` on `PATH`
 - `ssh-keygen` on `PATH` (only if generating a new SSH deploy key)
 - `nvm` (only if using `NVM_AUTO_INSTALL` or relying on `.nvmrc`)
+- `pnpm` or `yarn` for projects that use them. On Node < 25 corepack provides these; Node >= 25 no longer bundles corepack, so install them for the active Node version or set `COREPACK_AUTO_INSTALL=true`
 
 ## Usage
 

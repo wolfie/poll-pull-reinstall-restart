@@ -46,6 +46,14 @@ const args = meow(
                             whenever project is (re)started
         POLL_INTERVAL      (default: 60) How many seconds between polls to remote
                             for updates
+        NVM_AUTO_INSTALL   (default: true) Run nvm install on startup and on each
+                            changed pull (requires .nvmrc and nvm)
+        COREPACK_ENABLE    (default: true) Run corepack enable after each Node
+                            version switch
+        COREPACK_AUTO_INSTALL
+                            (default: false) If pnpm/yarn and corepack are both
+                            missing (Node 25+), run npm install -g corepack.
+                            Requires COREPACK_ENABLE
         SERVICE_NAME       (optional) Label prepended to ntfy notification titles,
                             e.g. "[my-app] Service started"
         NTFY_TOPIC         (optional) ntfy topic to send lifecycle notifications to
